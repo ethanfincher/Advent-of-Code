@@ -1,0 +1,15 @@
+[
+    {
+        "bag_color": "thing",
+        "child_bags": [
+            {
+                "bag_color": "another thing",
+                "num_of_bags": 1
+            },
+            {
+                "bag_color": "another thing 2",
+                "num_of_bags": 2
+            }
+        ]
+    }
+]
