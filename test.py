@@ -1,3 +1,2 @@
-dict1 = {"a": 1, "b": 2}
-new_dict = {"a": 3, "c": 4}
-print(dict1 | new_dict)
+numbers = [2, 1, 3, 0, 0]
+print(numbers[:-1][::-1].index(numbers[4]))
