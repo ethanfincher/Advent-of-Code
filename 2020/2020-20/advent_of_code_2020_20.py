@@ -9,7 +9,7 @@ with open("2020-20\\input.txt", "r") as tfile:
     tile_numbers = [int(re.search(r' (\d*):', tile[0]).group(1)) for tile in raw_tiles]
     # list of sides (left top right bottom) of each tile, index still matches
     tile_sides = []
-# for each tile, get 4 sides
+# for each tile, get the 4 sides
 for index, tile in enumerate(whole_tiles):
     left_top_right_bottom = ["".join([row[0] for row in tile]), tile[0], "".join([row[-1] for row in tile]), tile[-1]]
     tile_sides.append(left_top_right_bottom)
