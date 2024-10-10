@@ -10,6 +10,7 @@ tile_size = len(raw_tiles[0][1])
 tiles = []
 for raw_tile in raw_tiles:
     tiles.append(np.array([list(line) for line in raw_tile[1:]]))
+tiles_copy = tiles.copy()
 
 def extract_edges(tile):
     top = tile[0, :]
@@ -17,8 +18,8 @@ def extract_edges(tile):
     left = tile[:, 0]
     right = tile[:, -1]
     return top, bottom, left, right
-already_used = []
-def matching_tile(edge_to_match, original_tile, side_to_match=None):
+
+def matching_tile(edge_to_match, original_tile, side_to_match=None, is_hack=False):
     for index, tile in enumerate([tile for tile in tiles if not np.array_equal(tile, original_tile)]):
         edges = extract_edges(tile)
         if np.any(np.all(edges == edge_to_match, axis=1)) or np.any(np.all(edges == edge_to_match[::-1], axis=1)): 
