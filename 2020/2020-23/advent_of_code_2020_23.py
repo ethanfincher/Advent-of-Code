@@ -1,6 +1,6 @@
-cups = [int(char) for char in open("2020\\2020-23\\input.txt").read().strip()]
+cups = [int(char) for char in open("2020\\2020-23\\input.txt").read().strip().split(",")]
 current_cup = cups[0]
-for i in range(10000000):
+for i in range(100000):
     removed_cups = []
     destination_cup = current_cup
     # find the index for the current cup
@@ -17,4 +17,5 @@ for i in range(10000000):
     cups = cups[:cups.index(destination_cup)+1] + removed_cups + cups[cups.index(destination_cup)+1:]
     # find the new current cup
     current_cup = cups[(cups.index(current_cup)+1)%len(cups)]
-print(cups)
+    print(cups)
+# print(cups)
