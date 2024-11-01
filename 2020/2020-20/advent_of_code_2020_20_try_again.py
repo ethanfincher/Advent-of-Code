@@ -10,7 +10,6 @@ tile_size = len(raw_tiles[0][1])
 tiles = []
 for raw_tile in raw_tiles:
     tiles.append(np.array([list(line) for line in raw_tile[1:]]))
-tiles_copy = tiles.copy()
 
 def extract_edges(tile):
     top = tile[0, :]
@@ -19,30 +18,42 @@ def extract_edges(tile):
     right = tile[:, -1]
     return top, bottom, left, right
 
-def matching_tile(edge_to_match, original_tile, side_to_match=None, is_hack=False):
+def matching_tile(edge_to_match, original_tile, side_to_match=None):
+    # loop through all tiles except the one we're trying to match
     for index, tile in enumerate([tile for tile in tiles if not np.array_equal(tile, original_tile)]):
         edges = extract_edges(tile)
+        # if any edge or inversed edge matches the edge to match
         if np.any(np.all(edges == edge_to_match, axis=1)) or np.any(np.all(edges == edge_to_match[::-1], axis=1)): 
+            # if we don't care about orienting the sides, just return the tile
             if side_to_match != None:
+                # rotate the tile 90 degrees and check if the correct side matches
                 for _ in range(4):
                     if np.array_equal(extract_edges(tile)[side_to_match], edge_to_match): 
+                        # remove tile from list so it cannot be used twice
                         del tiles[index]
                         return tile
                     tile = np.rot90(tile)
+                # inverse the tile and try again
                 tile = tile[::-1, :]
                 for _ in range(4):
-                    if np.array_equal(extract_edges(tile)[side_to_match], edge_to_match): 
+                    if np.array_equal(extract_edges(tile)[side_to_match], edge_to_match):
                         del tiles[index]
                         return tile
                     tile = np.rot90(tile)
             return tile
+    print(original_tile)
+    exit()
     return None
 
+# create empty grid (4d array)
 tile_grid = np.empty((tile_grid_size,tile_grid_size,tile_size,tile_size), dtype=object)
+
+# find top left
 for tile in tiles:
     edges = extract_edges(tile)
-    if not isinstance(matching_tile(edges[0], tile), np.ndarray) and not isinstance(matching_tile(edges[2], tile), np.ndarray): tile_grid[0][0] = tile
-
+    if not isinstance(matching_tile(edges[0], tile), np.ndarray) and not isinstance(matching_tile(edges[2], tile), np.ndarray): 
+        tile_grid[0][0] = tile
+        break
 
 for index, row in enumerate(tile_grid[:-1]):
     current_tile = row[0]
@@ -56,7 +67,6 @@ for r_index, row in enumerate(tile_grid):
         tile_grid[r_index][c_index+1] = matching_tile(edges[3], current_tile, 2)
 
 
-# tile_grid = tile_grid[:, :, 1:-1, 1:-1]
 original_shape = np.shape(tile_grid)
 combined_square_size = original_shape[0] * original_shape[2]
 combined_grid = np.empty((combined_square_size, combined_square_size), dtype=object)
