@@ -66,8 +66,6 @@ def find_matching_tile(starting_tile, match_right):
             flips += 1
     return matching_tile
 
-
-
 for row in range(len(tile_grid)):
     # match, rotate, and add all tiles to the right of it
     for col in range(len(tile_grid[0])):
