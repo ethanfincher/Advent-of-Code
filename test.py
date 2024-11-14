@@ -1,1 +1,1 @@
-print((2/3).is_integer())
+print(123 | 456)
