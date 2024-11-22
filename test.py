@@ -1,8 +1,2 @@
-totals_list = []
-rolls = [1,2,3]
-for x in rolls:
-    for y in rolls:
-        for z in rolls:
-            totals_list.append(x+y+z)
-totals_list.sort()
-print(totals_list)
+my_list = [1,2,3,4,5,6]
+print("".join(str(num) for num in my_list))
