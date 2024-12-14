@@ -1,4 +1,6 @@
 import re
+import sympy as sp
+
 raw_machines = open("2024/13/input.txt").read().strip().split("\n\n")
 
 machines = []
@@ -30,47 +32,19 @@ for raw_machine in raw_machines:
 # print(total_tokens)
 
 # Part 2
+token_total = 0
 for machine in machines:
-    max_b_x = machine["prize"]["x"] // machine["b"]["x"]
-    min_a_x = None
-    b_x_delta = None
-    a_x_delta = None
-    for count in range(max_b_x, -1, -1):  # Start from max_count and work down
-        remainder = machine["prize"]["x"] - (count * machine["b"]["x"])
-        if remainder % machine["a"]["x"] == 0:
-            if not min_a_x:
-                max_b_x = count
-                min_a_x = remainder // machine["a"]["x"]
-            else:
-                b_x_delta = count - max_b_x
-                a_x_delta = (remainder // machine["a"]["x"]) - min_a_x
-                break
-    
-    max_b_y = machine["prize"]["y"] // machine["b"]["y"]
-    min_a_y = None
-    b_y_delta = None
-    a_y_delta = None
-    for count in range(max_b_y, -1, -1):  # Start from may_count and work down
-        remainder = machine["prize"]["y"] - (count * machine["b"]["y"])
-        if remainder % machine["a"]["y"] == 0:
-            if not min_a_y:
-                max_b_y = count
-                min_a_y = remainder // machine["a"]["y"]
-            else:
-                b_y_delta = count - max_b_y
-                a_y_delta = (remainder // machine["a"]["y"]) - min_a_y
-                break
+    # need to solve for system
+    # ax * a + bx * b = px
+    # ay * a + by * b = py
+    # first time using sympy, chat GPT helped me arrive at the solution
+    a, b = sp.symbols('a b')
+    eq1 = sp.Eq(machine["a"]["x"] * a + machine["b"]["x"] * b, machine["prize"]["x"])
+    eq2 = sp.Eq(machine["a"]["y"] * a + machine["b"]["y"] * b, machine["prize"]["y"])
 
-    possible_x = []
-    while max_b_x > 0:
-        possible_x.append((max_b_x, min_a_x))
-        max_b_x = max_b_x + b_x_delta
-        min_a_x = min_a_x + a_x_delta
+    # Solve the system of equations
+    solution = sp.solve([eq1, eq2], (a, b))
+    if solution[a].is_integer and solution[b].is_integer:
+        token_total += solution[a]*3 + solution[b]
 
-    possible_y = []
-    while max_b_y > 0:
-        possible_y.append((max_b_y, min_a_y))
-        max_b_y = max_b_y + b_y_delta
-        min_a_y = min_a_y + a_y_delta
-
-    print([x for x in possible_x if x in possible_y])
+print(token_total)
