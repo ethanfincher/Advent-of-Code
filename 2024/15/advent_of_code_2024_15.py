@@ -10,7 +10,7 @@ for line_index, line in enumerate(starting_grid):
     starting_grid[line_index] = line
 grid = np.array([list(line) for line in starting_grid])
 
-current_index = result = list(zip(*np.where(grid == "@")))[0]
+current_index = list(zip(*np.where(grid == "@")))[0]
 instructions = "".join(raw_input[1].strip().split("\n"))
 
 for instruction_index, instruction in enumerate(instructions):
