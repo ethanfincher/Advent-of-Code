@@ -1,4 +1,1 @@
-while True:
-    print("hit")
-    continue
-    break
+".".join([1,2,3])
